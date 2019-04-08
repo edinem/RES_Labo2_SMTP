@@ -1,0 +1,29 @@
+<config>
+    <server>
+        <ip></ip>
+        <port></port>
+    </server>
+    <groups>
+        <group>
+                <fakemail>
+                    <firstname></firstname>
+                    <lastname></lastname>
+                    <mail></mail>
+                </fakemail>
+                <victims>
+                    <victim>
+                    </victim>
+                    <victim>
+                    </victim>
+                </victims>
+        </group>
+    </groups>
+    <messages>
+        <message>
+            <subject>
+            </subject>
+            <text>
+            </text>
+        </message>
+    </messages>
+</config>
