@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Parser {
 
@@ -16,7 +17,8 @@ public class Parser {
     private ArrayList<Message> messageList;
 
     Parser(){
-
+        this.groupList = new ArrayList<>();
+        this.messageList = new ArrayList<>();
     }
 
     public void readConfig(String fileName){
@@ -32,9 +34,11 @@ public class Parser {
             NodeList messages = doc.getElementsByTagName("message");
 
             System.out.println("Creating server...");
+            String username = server.getElementsByTagName("username").item(0).getTextContent();
+            String password = server.getElementsByTagName("password").item(0).getTextContent();
             String ip = server.getElementsByTagName("ip").item(0).getTextContent();
             int port = Integer.valueOf(server.getElementsByTagName("port").item(0).getTextContent());
-            this.server = new SMTPServer(ip,port);
+            this.server = new SMTPServer(username,password,ip,port);
             System.out.println("Server created...");
 
             System.out.println("Creating groups...");
@@ -44,7 +48,7 @@ public class Parser {
                         Element eGroup = (Element)nGroup;
                         Element fakemail = (Element)eGroup.getElementsByTagName("fakemail").item(0);
                         String firstName = fakemail.getElementsByTagName("firstname").item(0).getTextContent();
-                        String lastName = fakemail.getElementsByTagName("lastName").item(0).getTextContent();
+                        String lastName = fakemail.getElementsByTagName("lastname").item(0).getTextContent();
                         String mail = fakemail.getElementsByTagName("mail").item(0).getTextContent();
 
                         Attacker attacker = new Attacker(firstName,lastName,mail);
@@ -64,16 +68,17 @@ public class Parser {
             for(int i = 0; i < messages.getLength(); ++i){
                 Node nMessage = messages.item(i);
                 if(nMessage.getNodeType() == Node.ELEMENT_NODE){
-                    Element eMessages = (Element)nMessage;
-                    Element eMessage = (Element)eMessages.getElementsByTagName("message").item(0);
+                    Element eMessage = (Element)nMessage;
                     String subject = eMessage.getElementsByTagName("subject").item(0).getTextContent();
                     String text = eMessage.getElementsByTagName("text").item(0).getTextContent();
 
-                    Message message = new Message(subject,text);
 
-                    this.messageList.add(message);
+                    Message m = new Message(subject,text);
+                    this.messageList.add(m);
                 }
             }
+            System.out.println("Messages created...");
+            System.out.println("Attack ready");
 
         }catch (Exception e){
             System.err.format("Exception occurred trying to read '%s'.", fileName);
@@ -81,8 +86,25 @@ public class Parser {
         }
     }
 
+
+    public void attack(){
+        System.out.println("Starting attack...");
+        Random rand = new Random();
+
+        for (Group g: groupList) {
+            Message m = messageList.get(rand.nextInt(messageList.size()));
+            Attacker a = g.getAttacker();
+            ArrayList<String> victims = g.getVictims();
+
+            for(String v : victims){
+                server.sendMail(a.getFirstname(),a.getLastname(),a.getMail(),v,m.getSubject(),m.getMessage());
+            }
+        }
+        System.out.println("Attack finished...");
+    }
     public static void main(String[] args) {
             Parser p = new Parser();
             p.readConfig("config.xml");
+            p.attack();
     }
 }

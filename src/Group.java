@@ -12,4 +12,12 @@ public class Group {
     public void addVictim(String victim){
         victims.add(victim);
     }
+
+    public Attacker getAttacker() {
+        return attacker;
+    }
+
+    public ArrayList<String> getVictims() {
+        return victims;
+    }
 }

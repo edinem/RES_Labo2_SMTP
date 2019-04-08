@@ -13,4 +13,12 @@ public class Message {
         String tmp = subject + "\t" + message;
         return tmp;
     }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

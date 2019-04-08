@@ -8,4 +8,16 @@ public class Attacker {
         this.lastname = lastname;
         this.mail = mail;
     }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getMail() {
+        return mail;
+    }
 }

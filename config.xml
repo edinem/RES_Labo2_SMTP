@@ -1,29 +1,37 @@
 <config>
     <server>
-        <ip></ip>
-        <port></port>
+        <username>406d9159db79e3</username>
+        <password>5b6a03c9a55ec8</password>
+        <ip>smtp.mailtrap.io</ip>
+        <port>25</port>
     </server>
     <groups>
         <group>
                 <fakemail>
-                    <firstname></firstname>
-                    <lastname></lastname>
-                    <mail></mail>
+                    <firstname>Donald</firstname>
+                    <lastname>Trump</lastname>
+                    <mail>donald@trump.com</mail>
                 </fakemail>
                 <victims>
-                    <victim>
-                    </victim>
-                    <victim>
-                    </victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
                 </victims>
         </group>
     </groups>
     <messages>
         <message>
-            <subject>
-            </subject>
-            <text>
-            </text>
+            <subject>Invitation</subject>
+            <text>Maison blanche</text>
         </message>
     </messages>
 </config>
