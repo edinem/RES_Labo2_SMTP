@@ -49,17 +49,11 @@ public class SMTPServer {
     public void sendMail(String fromFirstName, String fromLastName, String fromEmail, String toEmail, String subject, String text) throws IOException {
 
         sendCommand("MAIL From:<"+fromEmail+">");
-        System.out.println(in.readLine());
         sendCommand("RCPT To:<"+toEmail+">");
-        System.out.println(in.readLine());
         sendCommand("data");
-        System.out.println(in.readLine());
 
-        sendCommand("From: " + fromEmail);
-        sendCommand("To: " + toEmail);
-        sendCommand("Subject: " + subject);
-        sendCommand(text);
-        out.write("\r\n.");
+        writeMessage(fromEmail,toEmail,subject,text);
+        System.out.println(in.readLine());
         }
 
         public void sendCommand(String command) throws IOException {
@@ -68,11 +62,40 @@ public class SMTPServer {
             out.flush();
             out.print("\r\n");
             out.flush();
-            String line = "";
-
-            while ((line = in.readLine()) != null) {
+            String line = in.readLine();
+            System.out.println(line);
+            if(line.contains("220") || line.contains("250") || line.contains("334") || line.contains("354")){
+                return;
+            }
+            while (!line.contains("220") || !line.contains("250")) {
+                if(line.equals("250 HELP")){
+                    return;
+                }
+                line = in.readLine();
                 System.out.println(line);
             }
+        }
+
+        public void writeMessage(String from, String to, String subject, String text) {
+            out.write("From: " + from);
+            out.write("\r\n");
+            out.flush();
+
+            out.write("To: " + to);
+            out.write("\r\n");
+            out.flush();
+
+            out.write("Subject: " + subject);
+            out.write("\r\n");
+            out.flush();
+            out.write("\r\n");
+            out.flush();
+
+            out.write(text);
+            out.write("\r\n");
+            out.flush();
+            out.write("\r\n.\r\n");
+            out.flush();
         }
     }
 

@@ -15,6 +15,13 @@
                 <victims>
                     <victim>edin.mujkanovic@protonmail.com</victim>
                     <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
+                    <victim>edin.mujkanovic@protonmail.com</victim>
                 </victims>
         </group>
     </groups>
@@ -22,6 +29,14 @@
         <message>
             <subject>Invitation</subject>
             <text>Maison blanche</text>
+        </message>
+        <message>
+            <subject>Invitation</subject>
+            <text>Kremelin</text>
+        </message>
+        <message>
+            <subject>Invitation</subject>
+            <text>Elysée</text>
         </message>
     </messages>
 </config>

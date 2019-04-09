@@ -94,11 +94,11 @@ public class Parser {
         Random rand = new Random();
 
         for (Group g: groupList) {
-            Message m = messageList.get(rand.nextInt(messageList.size()));
             Attacker a = g.getAttacker();
             ArrayList<String> victims = g.getVictims();
 
             for(String v : victims){
+                Message m = messageList.get(rand.nextInt(messageList.size()));
                 server.sendMail(a.getFirstname(),a.getLastname(),a.getMail(),v,m.getSubject(),m.getMessage());
             }
         }
