@@ -1,20 +1,20 @@
 import java.util.ArrayList;
 
 public class Group {
-    private Attacker attacker;
+    private Sender sender;
     private ArrayList<String> victims;
 
-    Group(Attacker attacker){
-        this.attacker = attacker;
-        this.victims = new ArrayList<>();
+    Group(Sender sender){
+        this.sender = sender;
+        this.victims = new ArrayList();
     }
 
     public void addVictim(String victim){
         victims.add(victim);
     }
 
-    public Attacker getAttacker() {
-        return attacker;
+    public Sender getSender() {
+        return sender;
     }
 
     public ArrayList<String> getVictims() {

@@ -1,9 +1,9 @@
-public class Attacker {
+public class Sender {
     private String firstname;
     private String lastname;
     private String mail;
 
-    Attacker(String firstname, String lastname, String mail){
+    Sender(String firstname, String lastname, String mail){
         this.firstname = firstname;
         this.lastname = lastname;
         this.mail = mail;

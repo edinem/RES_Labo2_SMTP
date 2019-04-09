@@ -10,16 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Parser {
+public class SpamAttack {
 
-    private ArrayList<String> options;
     private SMTPServer server;
     private ArrayList<Group> groupList;
     private ArrayList<Message> messageList;
 
-    Parser(){
-        this.groupList = new ArrayList<>();
-        this.messageList = new ArrayList<>();
+    SpamAttack(){
+        this.groupList = new ArrayList();
+        this.messageList = new ArrayList();
     }
 
     public void readConfig(String fileName){
@@ -52,9 +51,9 @@ public class Parser {
                         String lastName = fakemail.getElementsByTagName("lastname").item(0).getTextContent();
                         String mail = fakemail.getElementsByTagName("mail").item(0).getTextContent();
 
-                        Attacker attacker = new Attacker(firstName,lastName,mail);
+                        Sender sender = new Sender(firstName,lastName,mail);
 
-                        Group group = new Group(attacker);
+                        Group group = new Group(sender);
 
                         NodeList victims = eGroup.getElementsByTagName("victim");
                         for(int j = 0; j < victims.getLength(); ++j){
@@ -87,27 +86,25 @@ public class Parser {
         }
     }
 
-
     public void attack() throws IOException {
         System.out.println("Starting attack...");
         server.makeConnection();
         Random rand = new Random();
 
+        //on parcourt tous les groupes
         for (Group g: groupList) {
-            Attacker a = g.getAttacker();
-            ArrayList<String> victims = g.getVictims();
-
-            for(String v : victims){
+            Sender a = g.getSender();
+            //on parcourt toutes les victimes
+            for(String v : g.getVictims()){
+                //on selectionne un message
                 Message m = messageList.get(rand.nextInt(messageList.size()));
+                //on envoit le message a chaque victims.
                 server.sendMail(a.getFirstname(),a.getLastname(),a.getMail(),v,m.getSubject(),m.getMessage());
+                System.out.println("Message \"" + m.getMessage() + "\" to " + v);
             }
         }
+        server.closeConnection();
         System.out.println("Attack finished...");
     }
 
-    public static void main(String[] args) throws IOException {
-            Parser p = new Parser();
-            p.readConfig("config.xml");
-            p.attack();
-    }
 }
