@@ -36,27 +36,14 @@ public class SMTPServer {
         outt = smtpSocket.getOutputStream();
         in = new BufferedReader(new InputStreamReader(inn));
         out = new PrintWriter(new OutputStreamWriter(outt), true);
-        in.readLine();
 
         if(username != null){
             sendCommand("AUTH LOGIN");
-            System.out.println(in.readLine());
             sendCommand(Base64.getEncoder().encodeToString(username.getBytes()));
-            System.out.println(in.readLine());
             sendCommand(Base64.getEncoder().encodeToString(password.getBytes()));
-            System.out.println(in.readLine());
         }
 
         sendCommand("EHLO spamgenerator");
-        in.readLine();
-        in.readLine();
-        in.readLine();
-        in.readLine();
-        in.readLine();
-        in.readLine();
-        in.readLine();
-        in.readLine();
-        in.readLine();
     }
 
     public void sendMail(String fromFirstName, String fromLastName, String fromEmail, String toEmail, String subject, String text) throws IOException {
@@ -81,6 +68,11 @@ public class SMTPServer {
             out.flush();
             out.print("\r\n");
             out.flush();
+            String line = "";
+
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+            }
         }
     }
 
