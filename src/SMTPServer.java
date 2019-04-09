@@ -1,15 +1,13 @@
-
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Base64;
 import java.util.Date;
-import java.util.Properties;
-import javax.activation.*;
 
 import javax.mail.*;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 
 
@@ -18,6 +16,11 @@ public class SMTPServer {
     private String password;
     private String serverAdress;
     private int serverPort;
+    private Socket smtpSocket;
+    private InputStream inn;
+    private OutputStream outt;
+    private BufferedReader in;
+    private PrintWriter out;
 
 
     SMTPServer(String username, String password, String serverAdress, int serverPort){
@@ -27,51 +30,58 @@ public class SMTPServer {
         this.serverPort = serverPort;
     }
 
-    public void sendMail(String fromFirstName, String fromLastName, String fromEmail, String toEmail, String subject, String text){
-        Properties props = new Properties();
-        props.put("mail.smtp.host", this.serverAdress); //SMTP Host
-        props.put("mail.smtp.port", this.serverPort); //TLS Port
-        props.put("mail.smtp.auth", "true"); //enable authentication
-        //props.put("mail.smtp.starttls.enable", "true"); //enable STARTTLS
+    public void makeConnection() throws IOException {
+        this.smtpSocket = new Socket(this.serverAdress,this.serverPort);
+        inn = smtpSocket.getInputStream();
+        outt = smtpSocket.getOutputStream();
+        in = new BufferedReader(new InputStreamReader(inn));
+        out = new PrintWriter(new OutputStreamWriter(outt), true);
+        in.readLine();
 
-        //create Authenticator object to pass in Session.getInstance argument
-        Authenticator auth = new Authenticator() {
-            //override the getPasswordAuthentication method
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        };
-
-
-        Session session = Session.getInstance(props, auth);
-
-        MimeMessage msg = new MimeMessage(session);
-        //set message headers
-        try{
-            msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
-            msg.addHeader("format", "flowed");
-            msg.addHeader("Content-Transfer-Encoding", "8bit");
-
-            msg.setFrom(new InternetAddress(fromEmail, fromFirstName + " " + fromLastName));
-
-            msg.setReplyTo(InternetAddress.parse(fromEmail, false));
-
-            msg.setSubject(subject, "UTF-8");
-
-            msg.setText(text, "UTF-8");
-
-            msg.setSentDate(new Date());
-
-            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
-            System.out.println("Message is ready");
-            Transport.send(msg);
-
-            System.out.println("EMail Sent Successfully!!");
-         }
-	    catch (Exception e) {
-            e.printStackTrace();
+        if(username != null){
+            sendCommand("AUTH LOGIN");
+            System.out.println(in.readLine());
+            sendCommand(Base64.getEncoder().encodeToString(username.getBytes()));
+            System.out.println(in.readLine());
+            sendCommand(Base64.getEncoder().encodeToString(password.getBytes()));
+            System.out.println(in.readLine());
         }
-}
+
+        sendCommand("EHLO spamgenerator");
+        in.readLine();
+        in.readLine();
+        in.readLine();
+        in.readLine();
+        in.readLine();
+        in.readLine();
+        in.readLine();
+        in.readLine();
+        in.readLine();
+    }
+
+    public void sendMail(String fromFirstName, String fromLastName, String fromEmail, String toEmail, String subject, String text) throws IOException {
+
+        sendCommand("MAIL From:<"+fromEmail+">");
+        System.out.println(in.readLine());
+        sendCommand("RCPT To:<"+toEmail+">");
+        System.out.println(in.readLine());
+        sendCommand("data");
+        System.out.println(in.readLine());
+
+        sendCommand("From: " + fromEmail);
+        sendCommand("To: " + toEmail);
+        sendCommand("Subject: " + subject);
+        sendCommand(text);
+        out.write("\r\n.");
+        }
+
+        public void sendCommand(String command) throws IOException {
+            System.out.println("Writing: " + command);
+            out.print(command);
+            out.flush();
+            out.print("\r\n");
+            out.flush();
+        }
     }
 
 
