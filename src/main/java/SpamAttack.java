@@ -142,7 +142,7 @@ public class SpamAttack {
 
     public static void main(String[] args) throws IOException {
         SpamAttack p = new SpamAttack();
-        p.readConfig("../configMockMock.xml");
+        p.readConfig(args[0]);
         p.attack();
     }
 }
