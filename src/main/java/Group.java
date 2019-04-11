@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 public class Group {
-    private Sender sender;
+    private String sender;
     private ArrayList<String> victims;
 
-    Group(Sender sender){
+    Group(String sender){
         this.sender = sender;
         this.victims = new ArrayList();
     }
@@ -13,7 +13,7 @@ public class Group {
         victims.add(victim);
     }
 
-    public Sender getSender() {
+    public String getSender() {
         return sender;
     }
 

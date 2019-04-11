@@ -21,6 +21,10 @@ public class SpamAttack {
         this.messageList = new ArrayList();
     }
 
+    /**
+     * Method used to read config file to prepare the attack.
+     * @param fileName Config file
+     */
     public void readConfig(String fileName){
         try{
             File inputFile = new File(fileName);
@@ -30,8 +34,14 @@ public class SpamAttack {
             doc.getDocumentElement().normalize();
 
             Element server = (Element) doc.getElementsByTagName("server").item(0);
-            NodeList groups = doc.getElementsByTagName("group");
+            NodeList victims = doc.getElementsByTagName("victim");
             NodeList messages = doc.getElementsByTagName("message");
+            String tmp2 = doc.getElementsByTagName("nbGroups").item(0).getTextContent();
+            int nbGroups = Integer.valueOf(doc.getElementsByTagName("nbGroups").item(0).getTextContent());
+            int victimsPerGroup = victims.getLength() / nbGroups;
+            if( victimsPerGroup < 3){
+                throw new RuntimeException("Error... you don't have enough victims. Change your config and retry !");
+            }
 
             System.out.println("Creating server...");
             String username = server.getElementsByTagName("username").item(0).getTextContent();
@@ -41,27 +51,42 @@ public class SpamAttack {
             this.server = new SMTPServer(username,password,ip,port);
             System.out.println("Server created...");
 
+            //Store victims figuring in the config file
             System.out.println("Creating groups...");
-            for(int i = 0; i < groups.getLength(); ++i){
-                    Node nGroup = groups.item(i);
-                    if(nGroup.getNodeType() == Node.ELEMENT_NODE){
-                        Element eGroup = (Element)nGroup;
-                        Element fakemail = (Element)eGroup.getElementsByTagName("fakemail").item(0);
-                        String firstName = fakemail.getElementsByTagName("firstname").item(0).getTextContent();
-                        String lastName = fakemail.getElementsByTagName("lastname").item(0).getTextContent();
-                        String mail = fakemail.getElementsByTagName("mail").item(0).getTextContent();
+            ArrayList<String> victimList = new ArrayList<>();
+            for(int i = 0; i < victims.getLength(); ++i){
+                Node nVictim = victims.item(i);
+                if(nVictim.getNodeType() == Node.ELEMENT_NODE){
+                    Element eVictim = (Element)nVictim;
+                    String mailVictim = eVictim.getTextContent();
+                    victimList.add(mailVictim);
+                }
+            }
 
-                        Sender sender = new Sender(firstName,lastName,mail);
-
-                        Group group = new Group(sender);
-
-                        NodeList victims = eGroup.getElementsByTagName("victim");
-                        for(int j = 0; j < victims.getLength(); ++j){
-                            Element eVictim = (Element)victims.item(j);
-                            group.addVictim(eVictim.getTextContent());
-                        }
-                        this.groupList.add(group);
+            //Creates groups
+            while(victimList.size() > 0){
+                for(int i = 0; i < nbGroups;++i){
+                    int rand = (int) ((Math.random() * victimList.size()));
+                    String sender = victimList.get(rand);
+                    victimList.remove(sender);
+                    Group a = new Group(sender);
+                    for(int j = 0; j < victimsPerGroup-1;++j){
+                        rand = (int) ((Math.random() * victimList.size()));
+                        String tmp = victimList.get(rand);
+                        victimList.remove(rand);
+                        a.addVictim(tmp);
                     }
+
+                    if((i == nbGroups - 1) && victimList.size() !=0){
+                        for(int k = 0; k < victimList.size(); ++k){
+                            a.addVictim(victimList.get(k));
+                            victimList.remove(k);
+                        }
+                    }
+                    this.groupList.add(a);
+                }
+
+
             }
             System.out.println("Groups created....");
             System.out.println("Creating messages...");
@@ -78,7 +103,7 @@ public class SpamAttack {
                 }
             }
             System.out.println("Messages created...");
-            System.out.println("Attack ready");
+            System.out.println("Config file loaded...\nAttack ready");
 
         }catch (Exception e){
             System.err.format("Exception occurred trying to read '%s'.", fileName);
@@ -86,25 +111,38 @@ public class SpamAttack {
         }
     }
 
+    /**
+     *  Launch the attack
+     * @throws IOException
+     */
     public void attack() throws IOException {
         System.out.println("Starting attack...");
-        server.makeConnection();
-        Random rand = new Random();
+        try{
+            server.makeConnection();
+            Random rand = new Random();
 
-        //on parcourt tous les groupes
-        for (Group g: groupList) {
-            Sender a = g.getSender();
-            //on parcourt toutes les victimes
-            for(String v : g.getVictims()){
+            //on parcourt tous les groupes
+            for (Group g: groupList) {
+                String a = g.getSender();
+                //on parcourt toutes les victimes
                 //on selectionne un message
                 Message m = messageList.get(rand.nextInt(messageList.size()));
-                //on envoit le message a chaque victims.
-                server.sendMail(a.getFirstname(),a.getLastname(),a.getMail(),v,m.getSubject(),m.getMessage());
-                System.out.println("Message \"" + m.getMessage() + "\" to " + v);
+                for(String v : g.getVictims()){
+                    //on envoit le message a chaque victime
+                    server.sendMail(a,v,m.getSubject(),m.getMessage());
+                    System.out.println("Message \"" + m.getMessage() + "\" to " + v + " from " + a + " sent");
+                }
             }
+            server.closeConnection();
+            System.out.println("Attack finished...");
+        }catch(IOException e){
+            System.out.println("Attack failed");
         }
-        server.closeConnection();
-        System.out.println("Attack finished...");
     }
 
+    public static void main(String[] args) throws IOException {
+        SpamAttack p = new SpamAttack();
+        p.readConfig("../configMockMock.xml");
+        p.attack();
+    }
 }

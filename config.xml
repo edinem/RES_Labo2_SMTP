@@ -5,19 +5,15 @@
         <ip>smtp.mailtrap.io</ip>
         <port>25</port>
     </server>
-    <groups>
-        <group>
-                <fakemail>
-                    <firstname>Donald</firstname>
-                    <lastname>Trump</lastname>
-                    <mail>donald@trump.com</mail>
-                </fakemail>
-                <victims>
-                    <victim>edin.mujkanovic@protonmail.com</victim>
-                    <victim>edin.mujkanovic@protonmail.com</victim>
-                </victims>
-        </group>
-    </groups>
+    <nbGroups>2</nbGroups>
+    <victims>
+        <victim>edin.mujkanovic@protonmail.com</victim>
+        <victim>edin.mujkanovic@protonmail.com</victim>
+        <victim>edin.mujkanovic@protonmail.com</victim>
+        <victim>edin.mujkanovic@protonmail.com</victim>
+        <victim>edin.mujkanovic@protonmail.com</victim>
+        <victim>edin.mujkanovic@protonmail.com</victim>
+    </victims>
     <messages>
         <message>
             <subject>Invitation</subject>

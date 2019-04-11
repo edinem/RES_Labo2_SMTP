@@ -1,6 +1,4 @@
-/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/spamsmtp/src/main/java/Main.java
-/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/spamsmtp/src/main/java/Group.java
-/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/spamsmtp/src/main/java/Message.java
-/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/spamsmtp/src/main/java/SpamAttack.java
-/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/spamsmtp/src/main/java/Sender.java
-/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/spamsmtp/src/main/java/SMTPServer.java
+/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/smtpspam/src/main/java/Message.java
+/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/smtpspam/src/main/java/SpamAttack.java
+/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/smtpspam/src/main/java/SMTPServer.java
+/home/rayranu/CloudStation/Etudes/HEIG-VD/2018/Semestre 2/RES/labos/smtpspam/src/main/java/Group.java

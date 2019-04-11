@@ -9,11 +9,6 @@ public class Message {
         this.message = message;
     }
 
-    public String toString(){
-        String tmp = subject + "\t" + message;
-        return tmp;
-    }
-
     public String getSubject() {
         return subject;
     }

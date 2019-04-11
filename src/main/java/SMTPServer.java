@@ -21,65 +21,113 @@ public class SMTPServer {
         this.supportAuth = false;
     }
 
+    /**
+     * Create connection with the SMTP Server
+     * @throws IOException
+     */
     public void makeConnection() throws IOException {
-        //creation du socket et des differents flux
-        this.smtpSocket = new Socket(this.serverAdress,this.serverPort);
-        in = new BufferedReader(new InputStreamReader(smtpSocket.getInputStream()));
-        out = new PrintWriter(new OutputStreamWriter(smtpSocket.getOutputStream()), true);
+        try{
+            //Create the socket and diffrents buffers
+            this.smtpSocket = new Socket(this.serverAdress,this.serverPort);
+            in = new BufferedReader(new InputStreamReader(smtpSocket.getInputStream()));
+            out = new PrintWriter(new OutputStreamWriter(smtpSocket.getOutputStream()), true);
 
-        sendCommand("EHLO illuseyoursmtpasspamserver");
+            //Sending the EHLO command to the server
+            sendCommand("EHLO illuseyoursmtpasspamserver");
 
-        if(supportAuth && username != null){
-            sendCommand("AUTH LOGIN");
-            sendCommand(Base64.getEncoder().encodeToString(username.getBytes()));
-            sendCommand(Base64.getEncoder().encodeToString(password.getBytes()));
-        }
-
-    }
-
-    public void sendMail(String fromFirstName, String fromLastName, String fromEmail, String toEmail, String subject, String text) throws IOException {
-
-    sendCommand("MAIL From:<"+fromEmail+">");
-    sendCommand("RCPT To:<"+toEmail+">");
-    sendCommand("data");
-
-    writeMessage(fromFirstName,fromLastName,fromEmail,toEmail,subject,text);
-    System.out.println(in.readLine());
-    }
-
-    public void sendCommand(String command) throws IOException {
-        out.print(command);
-        out.flush();
-        out.print("\r\n");
-        out.flush();
-        String line = "";
-
-        while((!line.contains("250 ") && (!line.contains("334 ")) && (!line.contains("354 ")) && (!line.contains("235") && !line.contains("OK"))) || line == null){
-            if(line.contains("AUTH")){
-                supportAuth = true;
+            //If the server supports authentification, if yes, send the username and the password
+            if(supportAuth && username != null){
+                sendCommand("AUTH LOGIN");
+                sendCommand(Base64.getEncoder().encodeToString(username.getBytes()));
+                sendCommand(Base64.getEncoder().encodeToString(password.getBytes()));
             }
-            line= in.readLine();
-            System.out.println(line);
+        }catch(IOException e){
+            System.out.println("Connection to SMTP server failed");
+        }
+
+    }
+
+    /**
+     * Send mail via the SMTP Server
+     * @param fromEmail email from which we send the mail
+     * @param toEmail email to which we send the mail
+     * @param subject subject of the mail
+     * @param text    body of the mail
+     * @throws IOException
+     */
+    public void sendMail(String fromEmail, String toEmail, String subject, String text) throws IOException {
+        try{
+            //sending the fromEmail to the server
+            sendCommand("MAIL From:<"+fromEmail+">");
+            //sending the toMail to the server
+            sendCommand("RCPT To:<"+toEmail+">");
+            //sending the data command to the server
+            sendCommand("data");
+
+            //we write the message
+            writeMessage(fromEmail,toEmail,subject,text);
+            in.readLine();
+
+        }catch(IOException e){
+            System.out.println("Failed to send mail...");
+        }
+    }
+
+    /**
+     * Method used to send commands to the server
+     * @param command command to send to the server
+     * @throws IOException
+     */
+    public void sendCommand(String command) throws IOException {
+        try{
+
+            //we send the command to the server
+            out.print(command);
+            out.flush();
+            out.print("\r\n");
+            out.flush();
+            String line = "";
+
+            //Check if the server respond something valid and if it supports authentification
+            while((!line.contains("250 ") && (!line.contains("334 ")) && (!line.contains("354 ")) && (!line.contains("235") && !line.contains("OK"))) || line == null){
+                if(line.contains("AUTH")){
+                    supportAuth = true;
+                }
+                line= in.readLine();
+            }
+        }catch(IOException e){
+            System.out.println("Failed to send command");
         }
     }
 
 
+    /**
+     * Method to write the message to the server
+     * @param from mail from which we want to send the mail
+     * @param to mail to which we want to send the mail
+     * @param subject subject of the mail
+     * @param text text of the mail
+     */
+    public void writeMessage(String from, String to, String subject, String text) {
 
-    public void writeMessage(String firstName, String lastName, String from, String to, String subject, String text) {
-        out.write("From: "+firstName + " " + lastName + "<" + from + ">");
+        //writing from
+        out.write("From: <" + from + ">");
         out.write("\r\n");
         out.flush();
 
+        //writinf to
         out.write("To: <" + to +">");
         out.write("\r\n");
         out.flush();
 
+        //writing subject
         out.write("Subject: " + subject);
         out.write("\r\n");
         out.flush();
         out.write("\r\n");
         out.flush();
 
+        //writing text
         out.write(text);
         out.write("\r\n");
         out.flush();
@@ -87,8 +135,18 @@ public class SMTPServer {
         out.flush();
     }
 
+    /**
+     * Method used to close connection with the servers
+     * @throws IOException
+     */
     public void closeConnection() throws IOException {
-        this.smtpSocket.close();
+        try{
+            this.smtpSocket.close();
+            this.out.close();
+            this.in.close();
+        }catch(IOException e){
+            System.out.println("Failed to close connection...");
+        }
     }
 }
 
