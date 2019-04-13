@@ -43,6 +43,8 @@ Les configurations du logiciel se trouve dans un seul fichier nommé *config.xml
 
 Afin de créer votre propre attaque, il vous suffit de modifier les informations concernant votre serveur, insérer vos victimes, et insérer vos messages. Le contenu de vos mails sera choisi aléatoirement parmi tous les messages que vous aurez prédéfinis.
 
+Exemple fichier de config pour un serveur MockMock tournant en local: 
+
 ```xml
 <config>
     <server>
@@ -59,21 +61,23 @@ Afin de créer votre propre attaque, il vous suffit de modifier les informations
     <messages>
         <message>
             <subject>You won</subject>
-            <text>Click <a href="http://google.ch">here to win an iPhone XS MAX 512GB</a>			 </text>
+            <text>Click here to win an iPhone XS MAX 512GB</text>
         </message>
         <message>
-            <subject>You won! </subject>
-            <text>Kremelin</text>
+            <subject>You won</subject>
+            <text>Click here to win an iPhone XS MAX 512GB</text>
         </message>
         <message>
-            <subject>You WOOOOON</subject>
-            <text>Elysée</text>
+            <subject>You won</subject>
+            <text>Click here to win an iPhone XS MAX 512GB</text>
         </message>
     </messages>
 </config>
 ```
 
-Après avoir créer votre propre fichier de configuration, il vous faut modifier le chemin d'accès dans la méthode main de la classe *SpamAttack*.  Après avoir modifier le chemin, il faut recompiler le projet. Pour ce faire, aller dans le dossier racine du projet, et taper la commande : `mvn clean install`. Le nouvel executable se trouvera dans le dossier *target/*.
+Après avoir créer votre propre fichier de configuration, il vous faut compiler le projet afin de créer l'executable. Pour ce faire, aller dans le dossier racine du projet, et taper la commande : `mvn clean install`. Le nouvel executable se trouvera dans le dossier *target/*. Pour exécuter le programme, il suffit de taper la commande :
+
+`java -jar spamsmtp-1.0-SNAPSHOT-launcher.jar chemin/vers/votre/fichier/de/config.xml` 
 
 ##### 4. A description of your implementation
 
