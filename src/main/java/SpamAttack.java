@@ -2,9 +2,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class SpamAttack {
      * Method used to read config file to prepare the attack.
      * @param fileName Config file
      */
-    public void readConfig(String fileName){
+    public void readConfig(String fileName) throws IOException, SAXException, ParserConfigurationException {
         try{
             File inputFile = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -107,7 +109,7 @@ public class SpamAttack {
 
         }catch (Exception e){
             System.err.format("Exception occurred trying to read '%s'.", fileName);
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -116,8 +118,8 @@ public class SpamAttack {
      * @throws IOException
      */
     public void attack() throws IOException {
-        System.out.println("Starting attack...");
         try{
+            System.out.println("Starting attack...");
             server.makeConnection();
             Random rand = new Random();
 
@@ -136,13 +138,21 @@ public class SpamAttack {
             server.closeConnection();
             System.out.println("Attack finished...");
         }catch(IOException e){
-            System.out.println("Attack failed");
+            throw e;
         }
     }
 
     public static void main(String[] args) throws IOException {
-        SpamAttack p = new SpamAttack();
-        p.readConfig(args[0]);
-        p.attack();
+        try{
+            SpamAttack p = new SpamAttack();
+            if(args.length != 1){
+                System.out.println("You must provide the config file as parameter.");
+                return;
+            }
+            p.readConfig(args[0]);
+            p.attack();
+        }catch (Exception e){
+            System.out.println("Attack failed");
+        }
     }
 }

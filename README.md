@@ -8,7 +8,7 @@
 
 ##### 1. Introduction
 
-Durant ce labaratoire, nous avons du implémenter un client SMTP qui se connect à un serveur SMTP afin d'envoyer des mails à des victimes. Ces dernières se trouvent toutes dans le fichier configuration. Le logiciel va créer des groupes, composées de minimum 3 victimes, dont l'une d'entre elle sera l'expéditeur, et le reste les déstinataires. Le contenu des mails sera contenu 
+Durant ce labaratoire, nous avons du implémenter un client SMTP qui se connecte à un serveur SMTP afin d'envoyer des mails à des victimes. Ces dernières se trouvent toutes dans le fichier configuration. Le logiciel va créer des groupes, composées de minimum 3 victimes, dont l'une d'entre elle sera l'expéditeur, et le reste les déstinataires. Le contenu des mails sera également indiqué dans le fichier de configuration, créé par l'utilisateur. 
 
 ##### 2. Mise en place du serveur SMTP mock
 

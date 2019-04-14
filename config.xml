@@ -5,11 +5,8 @@
         <ip>smtp.mailtrap.io</ip>
         <port>25</port>
     </server>
-    <nbGroups>2</nbGroups>
+    <nbGroups>1</nbGroups>
     <victims>
-        <victim>edin.mujkanovic@protonmail.com</victim>
-        <victim>edin.mujkanovic@protonmail.com</victim>
-        <victim>edin.mujkanovic@protonmail.com</victim>
         <victim>edin.mujkanovic@protonmail.com</victim>
         <victim>edin.mujkanovic@protonmail.com</victim>
         <victim>edin.mujkanovic@protonmail.com</victim>
