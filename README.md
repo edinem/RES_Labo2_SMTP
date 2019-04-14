@@ -23,23 +23,23 @@ Afin de l'arreter, il suffit d'executer le script **stop-mockmock.sh** situé da
 
 Les configurations du logiciel se trouve dans un seul fichier nommé *config.xml*, ce dernier se trouve à la racine du projet. Plusieurs éléments se trouvent dans ce fichier : 
 
-- Balise <server>: 
+- Balise `<server>`: 
 
   Cette dernière contient les informations du serveur SMTP que le client va utiliser afin d'envoyer les mails. Le serveur est composé de : 
 
-  - une balise <username> qui spécifie le nom d'utilisateur à envoyer au serveur SMTP afin de s'identifier. **<u>Si aucune authentification est nécessaire, il faut laisser ce champs vide.</u>**
-  - une balise <password> qui spécifie le mot de passe à envoyer au serveur SMTP afin de s'identifier. **<u>Si aucune authentification est nécessaire, il faut laisser ce champs vide.</u>**
-  - une balise <ip> qui spécifie l'adresse du serveur SMTP. Nous pouvons également utiliser un nom de domaine.
-  - une balise <port> qui spécifie le port du serveur SMTP.
+  - une balise `<username>` qui spécifie le nom d'utilisateur à envoyer au serveur SMTP afin de s'identifier. **<u>Si aucune authentification est nécessaire, il faut laisser ce champs vide.</u>**
+  - une balise `<password>` qui spécifie le mot de passe à envoyer au serveur SMTP afin de s'identifier. **<u>Si aucune authentification est nécessaire, il faut laisser ce champs vide.</u>**
+  - une balise `<ip>` qui spécifie l'adresse du serveur SMTP. Nous pouvons également utiliser un nom de domaine.
+  - une balise `<port>` qui spécifie le port du serveur SMTP.
 
-- Une balise <victims> qui contient plusieurs <victim> qui contiennent les adresses mail des destinataires. 
+- Une balise `<victims>` qui contient plusieurs `<victim>` qui contiennent les adresses mail des destinataires. 
 
-- Balise <messages>:
+- Balise `<messages>`:
 
-  Cette dernière est composée de plusieurs <message>, qui eux sont composés de :
+  Cette dernière est composée de plusieurs `<message>`, qui eux sont composés de :
 
-  - une balise <sujet> qui contient le sujet du mail.
-  - une balise <text> qui contient le texte contenu dans le corps du mail.
+  - une balise `<sujet>` qui contient le sujet du mail.
+  - une balise `<text>` qui contient le texte contenu dans le corps du mail.
 
 Afin de créer votre propre attaque, il vous suffit de modifier les informations concernant votre serveur, insérer vos victimes, et insérer vos messages. Le contenu de vos mails sera choisi aléatoirement parmi tous les messages que vous aurez prédéfinis.
 
